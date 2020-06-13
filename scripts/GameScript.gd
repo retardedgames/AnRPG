@@ -93,7 +93,8 @@ func _on_joinDialogButton_pressed():
 	_nakama_match_join()
 func send_socket_message(message):
 	var op_code=1
-	var state = {"user_id":session.user_id,"data":message}
-	socket.send_match_state_async(current_match.match_id,op_code,JSON.print(state))
+	if session and current_match:
+		var state = {"user_id":session.user_id,"data":message}
+		socket.send_match_state_async(current_match.match_id,op_code,JSON.print(state))
 func _on_match_state(p_state:NakamaRTAPI.MatchData):
 	print(parse_json(p_state.data))

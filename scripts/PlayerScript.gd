@@ -16,31 +16,33 @@ onready var sprite = $PlayerAnimationSprite
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
-
+func move(x_input,delta):
+	if x_input !=0:
+		motion.x += x_input * ACCELERATION * delta
+		motion.x = clamp(motion.x,-MAX_SPEED,MAX_SPEED)
+		
+		sprite.animation = "run"
+		sprite.flip_h = x_input < 0
+	motion.y += GRAVITY * delta
+	if is_on_floor():
+		if x_input == 0:
+			sprite.animation = "idle1"
+			motion.x = lerp(motion.x,0,FRICTION)
+		if Input.is_action_just_pressed("ui_up"):
+			motion.y = -JUMP_FORCE
+	else:
+		sprite.animation = "jump"
+		if Input.is_action_just_released("ui_up") and motion.y < -JUMP_FORCE/2:
+			motion.y = -JUMP_FORCE/2
+		if x_input == 0:
+			motion.x = lerp(motion.x,0,AIR_RESISTANCE)
+	motion = move_and_slide(motion,Vector2.UP)
+	
 func _physics_process(delta):
 	if(!npc):
 		var x_input = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
-		if x_input !=0:
-			motion.x += x_input * ACCELERATION * delta
-			motion.x = clamp(motion.x,-MAX_SPEED,MAX_SPEED)
-			
-			sprite.animation = "run"
-			sprite.flip_h = x_input < 0
-		motion.y += GRAVITY * delta
-		if is_on_floor():
-			if x_input == 0:
-				sprite.animation = "idle1"
-				motion.x = lerp(motion.x,0,FRICTION)
-			if Input.is_action_just_pressed("ui_up"):
-				motion.y = -JUMP_FORCE
-		else:
-			sprite.animation = "jump"
-			if Input.is_action_just_released("ui_up") and motion.y < -JUMP_FORCE/2:
-				motion.y = -JUMP_FORCE/2
-			if x_input == 0:
-				motion.x = lerp(motion.x,0,AIR_RESISTANCE)
-		get_parent().send_socket_message(motion)
-		motion = move_and_slide(motion,Vector2.UP) 
+		move(x_input,delta)
+		get_parent().send_socket_message({"x_input":x_input,"delta":delta})
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

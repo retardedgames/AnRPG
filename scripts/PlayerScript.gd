@@ -17,7 +17,6 @@ onready var sprite = $PlayerAnimationSprite
 func _ready():
 	pass # Replace with function body.
 func move(x_input,delta):
-	print('Moving ',x_input,delta)
 	if x_input !=0:
 		motion.x += x_input * ACCELERATION * delta
 		motion.x = clamp(motion.x,-MAX_SPEED,MAX_SPEED)

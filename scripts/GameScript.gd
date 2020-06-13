@@ -99,5 +99,6 @@ func send_socket_message(message):
 func _on_match_state(p_state:NakamaRTAPI.MatchData):
 	var data=parse_json(p_state.data)
 	print(data)
-	players[data["user_id"]].position = Vector2(data["data"]["position"]["x"],data["data"]["position"]["y"])
+	if players[data["user_id"]]:
+		players[data["user_id"]].position = Vector2(data["data"]["position"]["x"],data["data"]["position"]["y"])
 	#players[data['user_id']].move(data['data'])

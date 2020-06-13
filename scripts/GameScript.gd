@@ -36,6 +36,7 @@ func _nakama_match_setup():
 	
 func _nakama_match_join():
 	var match_id = $JoinDialog/joinDialogTextEdit.text
+	$JoinDialog.hide()
 	current_match = yield(socket.join_match_async(match_id),"completed")
 	if current_match.is_exception():
 		print("An error occured while joining match: %s" % current_match)
@@ -66,3 +67,4 @@ func _input(event):
 	
 func _on_joinDialogButton_pressed():
 	_nakama_match_join()
+

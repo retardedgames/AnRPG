@@ -39,6 +39,7 @@ func _physics_process(delta):
 				motion.y = -JUMP_FORCE/2
 			if x_input == 0:
 				motion.x = lerp(motion.x,0,AIR_RESISTANCE)
+		get_parent().send_socket_message(motion)
 		motion = move_and_slide(motion,Vector2.UP) 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

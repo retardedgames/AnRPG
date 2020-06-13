@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://spriteframes/PlayerSpriteFrame.tres" type="SpriteFrames" id=1]
+
+[sub_resource type="CapsuleShape2D" id=1]
+
+[node name="Player" type="KinematicBody2D"]
+scale = Vector2( 2, 2 )
+
+[node name="PlayerCollisionShape" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="PlayerAnimationSprite" type="AnimatedSprite" parent="."]
+frames = ExtResource( 1 )
+frame = 1
+playing = true

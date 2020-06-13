@@ -25,6 +25,7 @@ func _nakama_socket_setup():
 	socket.connect("closed", self, "_on_socket_closed")
 	socket.connect("received_error", self, "_on_socket_error")
 	socket.connect("received_match_presence",self,"_on_match_presence")
+	socket.connect("received_match_state",self,"_on_match_state")
 	yield(socket.connect_async(session), "completed")
 	print("Done")
 
@@ -63,7 +64,12 @@ func _nakama_match_join():
 	for presence in current_match.presences:
 		print("User ID: %s Username: %s" % [presence.user_id,presence.username])
 		$MatchIDLabel.text="Match connected!"
-		
+		connected_opponents[presence.user_id] = presence
+		var x = $Player.duplicate()
+		x.npc = true;
+		players[presence.user_id] = x;
+		add_child(x)
+		print("added new player")
 	
 func _on_socket_connected():
 	print("Socket connected.")
@@ -86,4 +92,8 @@ func _input(event):
 func _on_joinDialogButton_pressed():
 	_nakama_match_join()
 func send_socket_message(message):
-	print(message)
+	var op_code=1
+	var state = {"user_id":session.user_id,"data":message}
+	socket.send_match_state_async(current_match.match_id,op_code,JSON.print(state))
+func _on_match_state(p_state:NakamaRTAPI.MatchData):
+	print(parse_json(p_state.data))

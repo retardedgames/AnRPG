@@ -17,6 +17,7 @@ onready var sprite = $PlayerAnimationSprite
 func _ready():
 	pass # Replace with function body.
 func move(x_input,delta):
+	print('Moving ',x_input,delta)
 	if x_input !=0:
 		motion.x += x_input * ACCELERATION * delta
 		motion.x = clamp(motion.x,-MAX_SPEED,MAX_SPEED)
@@ -42,7 +43,7 @@ func _physics_process(delta):
 	if(!npc):
 		var x_input = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 		move(x_input,delta)
-		get_parent().send_socket_message({"x_input":x_input,"delta":delta})
+		get_parent().send_socket_message({"position":{"x":position.x,"y":position.y}})
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

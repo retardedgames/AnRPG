@@ -8,6 +8,8 @@ var host = "192.168.0.108"
 var port = 7350
 var server_key = "defaultkey"
 var deviceKey = OS.get_unique_id()
+var connected_opponents:Dictionary
+var players:Dictionary
 
 func _ready():
 	_nakama_client_setup()
@@ -22,9 +24,25 @@ func _nakama_socket_setup():
 	socket.connect("connected", self, "_on_socket_connected")
 	socket.connect("closed", self, "_on_socket_closed")
 	socket.connect("received_error", self, "_on_socket_error")
+	socket.connect("received_match_presence",self,"_on_match_presence")
 	yield(socket.connect_async(session), "completed")
 	print("Done")
-	
+
+func _on_match_presence(p_presence: NakamaRTAPI.MatchPresenceEvent):
+	for p in p_presence.joins:
+		if p.user_id != session.user_id:
+			connected_opponents[p.user_id] = p
+			var x = $Player.duplicate()
+			x.npc = true;
+			players[p.user_id] = x;
+			add_child(x)
+			print("added new player")
+	for p in p_presence.leaves:
+		connected_opponents.erase(p.user_id)
+		var x= players[p.user_id]
+		players.erase((p.user_id));
+		remove_child(x)
+	print(connected_opponents)
 func _nakama_match_setup():
 	current_match = yield(socket.create_match_async(),"completed")
 	if current_match.is_exception():
@@ -67,4 +85,5 @@ func _input(event):
 	
 func _on_joinDialogButton_pressed():
 	_nakama_match_join()
-
+func send_socket_message(message):
+	print(message)

@@ -98,4 +98,5 @@ func send_socket_message(message):
 		socket.send_match_state_async(current_match.match_id,op_code,JSON.print(state))
 func _on_match_state(p_state:NakamaRTAPI.MatchData):
 	var data=parse_json(p_state.data)
+	print(data)
 	#players[data['user_id']].move(data['data'])

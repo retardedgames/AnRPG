@@ -42,7 +42,7 @@ func _physics_process(delta):
 	if(!npc):
 		var x_input = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 		move(x_input,delta)
-		get_parent().send_socket_message({"position":{"x":position.x,"y":position.y}})
+		get_parent().send_socket_message({"position":{"x":position.x,"y":position.y},"flip_h":x_input<0,"animation":$PlayerAnimationSprite.animation})
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

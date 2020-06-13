@@ -100,5 +100,8 @@ func _on_match_state(p_state:NakamaRTAPI.MatchData):
 	var data=parse_json(p_state.data)
 	print(data)
 	if players[data["user_id"]]:
-		players[data["user_id"]].position = Vector2(data["data"]["position"]["x"],data["data"]["position"]["y"])
+		var pl = players[data["user_id"]]
+		pl.get_node("PlayerAnimationSprite").flip_h=data['data']['flip_h']
+		pl.get_node("PlayerAnimationSprite").animation = data['data']['animation']
+		pl.position = Vector2(data["data"]["position"]["x"],data["data"]["position"]["y"])
 	#players[data['user_id']].move(data['data'])

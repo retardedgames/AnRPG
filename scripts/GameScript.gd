@@ -4,7 +4,7 @@ var session:NakamaSession
 var socket:NakamaSocket
 var current_match:NakamaRTAPI.Match
 var scheme = "http"
-var host = "192.168.0.108"
+var host = "voipi.fi"
 var port = 7350
 var server_key = "defaultkey"
 var deviceKey = OS.get_unique_id()

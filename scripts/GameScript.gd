@@ -16,7 +16,11 @@ func _ready():
 	
 func _nakama_client_setup():
 	client = Nakama.create_client(server_key, host, port, scheme)
-	session = yield(client.authenticate_device_async(deviceKey),"completed")
+	if deviceKey:
+		session = yield(client.authenticate_device_async(deviceKey),"completed")
+	else:
+		deviceKey=$".".get_instance_id()
+		session = yield(client.authenticate_device_async(deviceKey),"completed")
 	_nakama_socket_setup()
 	
 func _nakama_socket_setup():
